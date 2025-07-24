@@ -9,14 +9,14 @@ import (
 )
 
 // CreateTarGz creates a tar.gz archive from files matching the given patterns
-func CreateTarGz(patterns []string, outputPath string) error {
-	files, err := collectFilesByPatterns(patterns)
+func CreateTarGz(includePatterns []string, excludePatterns []string, outputPath string) error {
+	files, err := collectFilesByPatternsWithExclude(includePatterns, excludePatterns)
 	if err != nil {
 		return fmt.Errorf("failed to collect files: %w", err)
 	}
 
 	if len(files) == 0 {
-		return fmt.Errorf("no files found matching patterns: %v", patterns)
+		return fmt.Errorf("no files found matching with excluding patterns: %v", excludePatterns)
 	}
 
 	outFile, err := os.Create(outputPath)

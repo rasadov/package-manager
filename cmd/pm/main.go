@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/rasadov/package-manager/internal/commands"
 	"github.com/spf13/cobra"
 )
 
@@ -19,6 +20,9 @@ func main() {
 			fmt.Println("Version 1.0.0")
 		},
 	})
+
+	rootCmd.AddCommand(commands.Create())
+	rootCmd.AddCommand(commands.Update())
 
 	rootCmd.Execute()
 }
