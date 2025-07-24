@@ -38,10 +38,16 @@ func parseVersion(versionStr string) (Version, error) {
 	if err != nil {
 		return Version{}, fmt.Errorf("invalid major version: %s", parts[0])
 	}
+	if major < 0 {
+		return Version{}, fmt.Errorf("invalid major version (negative): %s", parts[0])
+	}
 
 	minor, err := strconv.Atoi(parts[1])
 	if err != nil {
 		return Version{}, fmt.Errorf("invalid minor version: %s", parts[1])
+	}
+	if minor < 0 {
+		return Version{}, fmt.Errorf("invalid minor version (negative): %s", parts[1])
 	}
 
 	patch := 0
@@ -49,6 +55,9 @@ func parseVersion(versionStr string) (Version, error) {
 		patch, err = strconv.Atoi(parts[2])
 		if err != nil {
 			return Version{}, fmt.Errorf("invalid patch version: %s", parts[2])
+		}
+		if patch < 0 {
+			return Version{}, fmt.Errorf("invalid patch version (negative): %s", parts[2])
 		}
 	}
 
@@ -64,6 +73,7 @@ func parseVersion(versionStr string) (Version, error) {
 // -1 if v < other
 //
 //	0 if v == other
+//
 //	1 if v > other
 func (v Version) Compare(other Version) int {
 	if v.Major != other.Major {

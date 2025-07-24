@@ -91,7 +91,7 @@ fi
 echo -e "${GREEN}✅ Build successful${NC}"
 
 # Run all tests together with coverage
-run_test "All Unit Tests with Coverage" "go test -cover ./internal/utils ./config"
+run_test "All Unit Tests with Coverage" "go test -cover ./internal/utils ./internal/controller ./config"
 
 # Integration tests (if SSH is available)
 if command -v ssh &> /dev/null && ssh -o BatchMode=yes -o ConnectTimeout=2 localhost exit &>/dev/null; then
