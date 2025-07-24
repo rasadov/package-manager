@@ -1,7 +1,7 @@
 {
-    "host": "localhost",
-    "port": 22,
-    "username": "bb",
-    "key_path": "~/.ssh/id_rsa",
-    "remote_dir": "/home/bb/packages"
-  }
+  "host": "your-server",
+  "port": 22,
+  "username": "your-username",  
+  "key_path": "~/.ssh/id_rsa",
+  "remote_dir": "/var/packages"
+}

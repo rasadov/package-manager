@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/rasadov/package-manager/config"
 	"github.com/rasadov/package-manager/internal/controller"
 	"github.com/spf13/cobra"
 )
@@ -24,7 +25,7 @@ func Update() *cobra.Command {
 			}
 
 			// Load SSH configuration
-			sshConfig, err := loadSSHConfig(configPath)
+			sshConfig, err := config.LoadSSHConfig(configPath)
 			if err != nil {
 				return fmt.Errorf("failed to load SSH config: %w", err)
 			}
