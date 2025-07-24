@@ -22,6 +22,10 @@ go.mod.sum
 bin/
 pkg/
 
+# SSH config
+ssh-config.json
+
+# Test output
 tests/e2e
 tests/output
 
