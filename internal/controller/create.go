@@ -1,4 +1,3 @@
-// internal/controller/controller.go
 package controller
 
 import (

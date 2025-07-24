@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // collectFilesByPatterns collects all files matching the given glob patterns (INCLUDE patterns)
@@ -12,7 +13,16 @@ func collectFilesByPatterns(patterns []string) ([]string, error) {
 	seenFiles := make(map[string]bool)
 
 	for _, pattern := range patterns {
-		matches, err := filepath.Glob(pattern)
+		var matches []string
+		var err error
+
+		// Check if pattern contains ** for recursive matching
+		if strings.Contains(pattern, "**") {
+			matches, err = expandRecursivePattern(pattern)
+		} else {
+			matches, err = filepath.Glob(pattern)
+		}
+
 		if err != nil {
 			return nil, fmt.Errorf("invalid pattern %s: %w", pattern, err)
 		}
@@ -38,6 +48,78 @@ func collectFilesByPatterns(patterns []string) ([]string, error) {
 	}
 
 	return allFiles, nil
+}
+
+// expandRecursivePattern handles ** patterns by walking the directory tree
+func expandRecursivePattern(pattern string) ([]string, error) {
+	var matches []string
+
+	// Split pattern into parts around **
+	parts := strings.Split(pattern, "**")
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("invalid recursive pattern: %s (must contain exactly one **)", pattern)
+	}
+
+	basePath := parts[0]
+	suffix := parts[1]
+
+	// Remove trailing slash from basePath
+	if basePath != "" && strings.HasSuffix(basePath, "/") {
+		basePath = strings.TrimSuffix(basePath, "/")
+	}
+
+	// Remove leading slash from suffix
+	if suffix != "" && strings.HasPrefix(suffix, "/") {
+		suffix = strings.TrimPrefix(suffix, "/")
+	}
+
+	// If basePath is empty, start from current directory
+	if basePath == "" {
+		basePath = "."
+	}
+
+	// Check if basePath exists
+	if _, err := os.Stat(basePath); os.IsNotExist(err) {
+		// If the base path doesn't exist, return empty results (not an error)
+		return matches, nil
+	}
+
+	// Walk the directory tree
+	err := filepath.Walk(basePath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			// Skip files/directories we can't access
+			return nil
+		}
+
+		if info.IsDir() {
+			// Skip directories - we only want files
+			return nil
+		}
+
+		// Check if the file matches the suffix pattern
+		if suffix == "" {
+			// No suffix pattern means match all files
+			matches = append(matches, path)
+		} else {
+			// Extract just the filename for pattern matching
+			fileName := filepath.Base(path)
+
+			// Use filepath.Match to check if filename matches the pattern
+			matched, err := filepath.Match(suffix, fileName)
+			if err != nil {
+				// Invalid pattern - skip this file
+				return nil
+			}
+
+			if matched {
+				matches = append(matches, path)
+			}
+		}
+
+		return nil
+	})
+
+	return matches, err
 }
 
 // collectFilesByPatternsWithExclude collects files matching include patterns but excludes files matching exclude patterns
