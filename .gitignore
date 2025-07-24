@@ -1,0 +1,27 @@
+# Binaries for programs
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test results
+*.test
+*.out
+
+# Go module cache
+.go/
+go.mod.sum
+
+# IDE-specific files (examples)
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Build output
+bin/
+pkg/
+
+# Temporary files
+*~
+.#*

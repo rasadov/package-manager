@@ -1,0 +1,11 @@
+{
+    "packages": [
+      {
+        "name": "my-test-package",
+        "ver": ">=1.0.0"
+      },
+      {
+        "name": "another-package"
+      }
+    ]
+  }
