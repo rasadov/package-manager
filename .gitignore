@@ -22,6 +22,9 @@ go.mod.sum
 bin/
 pkg/
 
+tests/e2e
+tests/output
+
 # Temporary files
 *~
 .#*
