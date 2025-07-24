@@ -5,13 +5,11 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"gopkg.in/yaml.v3"
 )
 
 type PacketTarget struct {
-	Path    string   `json:"path" yaml:"path"`
-	Exclude []string `json:"exclude,omitempty" yaml:"exclude,omitempty"`
+	Path    string   `json:"path"`
+	Exclude []string `json:"exclude,omitempty"`
 }
 
 func (pt *PacketTarget) UnmarshalJSON(data []byte) error {
@@ -31,24 +29,24 @@ func (pt *PacketTarget) UnmarshalJSON(data []byte) error {
 }
 
 type Dependency struct {
-	Name    string `json:"name" yaml:"name"`
-	Version string `json:"ver,omitempty" yaml:"ver,omitempty"`
+	Name    string `json:"name"`
+	Version string `json:"ver,omitempty"`
 }
 
 type PacketConfig struct {
-	Name         string         `json:"name" yaml:"name"`
-	Version      string         `json:"ver" yaml:"ver"`
-	Targets      []PacketTarget `json:"targets" yaml:"targets"`
-	Dependencies []Dependency   `json:"packets,omitempty" yaml:"packets,omitempty"`
+	Name         string         `json:"name"`
+	Version      string         `json:"ver"`
+	Targets      []PacketTarget `json:"targets"`
+	Dependencies []Dependency   `json:"packets,omitempty"`
 }
 
 type PackageRequest struct {
-	Name    string `json:"name" yaml:"name"`
-	Version string `json:"ver,omitempty" yaml:"ver,omitempty"`
+	Name    string `json:"name"`
+	Version string `json:"ver,omitempty"`
 }
 
 type PackagesConfig struct {
-	Packages []PackageRequest `json:"packages" yaml:"packages"`
+	Packages []PackageRequest `json:"packages"`
 }
 
 func LoadPacketConfig(filepath string) (*PacketConfig, error) {
@@ -64,10 +62,6 @@ func LoadPacketConfig(filepath string) (*PacketConfig, error) {
 	case "json":
 		if err := json.Unmarshal(data, &config); err != nil {
 			return nil, fmt.Errorf("failed to parse JSON config: %w", err)
-		}
-	case "yaml", "yml":
-		if err := yaml.Unmarshal(data, &config); err != nil {
-			return nil, fmt.Errorf("failed to parse YAML config: %w", err)
 		}
 	default:
 		return nil, fmt.Errorf("unsupported config file format: %s", ext)
@@ -89,10 +83,6 @@ func LoadPackagesConfig(filepath string) (*PackagesConfig, error) {
 	case "json":
 		if err := json.Unmarshal(data, &config); err != nil {
 			return nil, fmt.Errorf("failed to parse JSON packages: %w", err)
-		}
-	case "yaml", "yml":
-		if err := yaml.Unmarshal(data, &config); err != nil {
-			return nil, fmt.Errorf("failed to parse YAML packages: %w", err)
 		}
 	default:
 		return nil, fmt.Errorf("unsupported packages file format: %s", ext)

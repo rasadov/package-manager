@@ -90,16 +90,6 @@ if ! go build -o bin/pm ./cmd/pm; then
 fi
 echo -e "${GREEN}✅ Build successful${NC}"
 
-# Run Go unit tests
-run_test "Pattern Matching Tests" "go test -v ./internal/utils -run TestCollectFilesByPatternsWithExclude"
-run_test "Recursive Pattern Tests" "go test -v ./internal/utils -run TestExpandRecursivePattern" 
-run_test "Archive Creation Tests" "go test -v ./internal/utils -run TestCreateTarGz"
-run_test "Archive Extraction Tests" "go test -v ./internal/utils -run TestExtractTarGz"
-run_test "Archive Security Tests" "go test -v ./internal/utils -run TestExtractTarGzSecurityCheck"
-run_test "File Operations Tests" "go test -v ./internal/utils -run TestAddFileToTar"
-run_test "Archive Name Tests" "go test -v ./internal/utils -run TestGetArchiveName"
-run_test "Config Loading Tests" "go test -v ./config -run TestLoadPacketConfig"
-
 # Run all tests together with coverage
 run_test "All Unit Tests with Coverage" "go test -cover ./internal/utils ./config"
 
